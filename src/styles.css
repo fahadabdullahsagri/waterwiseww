@@ -20,7 +20,17 @@
 
 @theme inline {
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-ink: var(--ink-deep);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-paper: var(--paper);
+  --color-flow: var(--flow);
+  --color-flow-foreground: var(--flow-foreground);
+  --color-signal: var(--signal-amber);
+  --color-leak: var(--leak-red);
+  --color-saved: var(--saved-green);
+  --color-hair: var(--line-hair);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
   --radius-sm: calc(var(--radius) - 4px);
