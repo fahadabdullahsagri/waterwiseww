@@ -1,48 +1,66 @@
-# WaterWise / Agentrix 2026 — Rebuilt Proposal Blueprint
+# WaterWise — Agentrix multi-agent water platform (hackathon MVP)
 
-Goal: hand back one clean, judge-ready `.docx` that fixes the broken demo-flow section, unifies formatting, satisfies the submission checklist, sharpens the agentic (Agentrix) framing, and adds measurable success criteria — backed by real research across business, community, and government angles.
+One app, three audiences, four modules, one scripted 4-minute demo that runs end to end from a single button.
 
-## What you get
+## Priority order
 
-A single document, `AGENTRIX_2026_TeamProposal_TechTitans_v2.docx`, with:
+The scripted demo path is built first and everything else hangs off it. If time runs short, the demo still works.
 
-1. **Cover + one-line pitch** — team, track, problem in 25 words.
-2. **Problem & evidence** — cited water-loss, groundwater-depletion and irrigation-waste figures (India + global), each with a source line.
-3. **Solution overview** — WaterWise as one platform, four modules on a shared data layer, with a simple ASCII architecture diagram.
-4. **Agentic core (strengthened)** — this is the section judges score hardest. Each agent gets: trigger → perception → reasoning → tool/action → memory → human-in-loop gate. Includes a cross-module scenario (drought signal raises irrigation target, LeakSense reprioritises repair queue, JalConnect notifies affected wards) written as an actual agent trace, not prose.
-5. **Rebuilt demo flow** — a numbered 4-minute walkthrough with timestamps, screen-by-screen, what the judge sees, and the "wow" beat. Replaces the currently broken/fragmented section.
-6. **Measurable success criteria** — replaces vague claims with a metrics table: target, how measured, data source, baseline. Examples: leak-detection precision/recall on simulated sensor data, false-alarm rate, chatbot intent accuracy, dashboard p95 latency, irrigation water saved (% vs fixed-schedule baseline), alert-to-action time.
-7. **Impact, three lenses**
-   - Business: TAM/SAM/SOM, buyer personas, pricing model (per-connection SaaS + per-sensor), unit economics, competitor scan.
-   - Community/environment: litres saved per 1,000 connections, hours of water-collection labour avoided, equity of supply.
-   - Government: alignment to Jal Jeevan Mission / AMRUT / Atal Bhujal, NRW (non-revenue water) reduction mandates, procurement path, data-sovereignty and open-data posture.
-8. **Roadmap & risks** — hackathon MVP scope vs 6-month pilot, top 5 risks with mitigations.
-9. **Checklist compliance appendix** — every submission requirement mapped to the page/section that answers it.
+## Backend (Lovable Cloud)
 
-## Formatting unification
+Enable Cloud, then create tables with RLS and public-read demo policies:
 
-US Letter, 1" margins, Arial throughout, one heading scale (H1/H2/H3), consistent bullet and numbered list styles via proper Word numbering (no manual bullet characters), tables with fixed widths and light borders, page numbers in the footer, table of contents at the front. No mixed fonts, no orphan headings, no stray placeholder text.
+`wards`, `sensors`, `readings`, `alerts`, `agent_events`, `citizen_reports`, `irrigation_districts`, `work_orders`, `notifications`.
 
-## Research approach
+Seeded in the migration itself (not on page load): a demo city with 6 wards, 18 sensors, 1 irrigation district, historical readings and an NRW trend series — so no screen is ever empty.
 
-Parallel research passes on: Indian and global water-utility loss statistics, NRW benchmarks, smart-water-management market sizing and named competitors, Jal Jeevan Mission / Atal Bhujal / AMRUT scheme details and funding routes, and public sensor/weather/groundwater data sources. Every number in the document carries an inline source. Anything I cannot verify gets marked as an assumption rather than stated as fact.
+Server-side logic uses server functions (this stack's equivalent of edge functions; no separate function deploys needed):
 
-## Free APIs / data (no paid keys)
+- Simulated sensor generator — seeded random walk with injected leak events, writing the exact schema real hardware would use. UI labels it "Live simulation — plug-and-play with real sensors."
+- Agent reasoning — one call per agent (LeakSense / JalConnect / IrrigateAI / GovDash) through the Lovable AI Gateway with a strict per-agent system prompt returning `{decision, confidence, reasoning_summary, action, requires_human_approval}`. Every result is a row in `agent_events`, so the Agent Trace panel is a query, never hand-faked.
+- Live data fetches: Open-Meteo (weather/forecast) and NASA POWER (evapotranspiration) — both keyless, wired live today. India-WRIS sits behind a labeled "Connect real feed" toggle falling back to seeded data, with the 5-minute data.gov.in signup noted in the UI.
 
-I will confirm availability during research and give you exact signup steps for any that need a key. Candidates, all free tiers:
+## Modules
 
-- **Open-Meteo** — weather + forecast, no key at all.
-- **India-WRIS / data.gov.in** — groundwater level, reservoir storage, rainfall. data.gov.in needs a free key; I'll give you the click-by-click.
-- **NASA POWER** — evapotranspiration and solar data for irrigation math, no key.
-- **OpenStreetMap / Overpass** — ward and pipeline geography, no key.
-- **Lovable AI Gateway** — the agent reasoning and chatbot, already included here, no external key.
+- **LeakSense** — scores each reading, ranks a repair queue by (est. litres/hour lost x population affected x pipe age), drafts a work order.
+- **JalConnect** — citizen chat (rule-based + LLM) with photo upload; classifies intent, geotags the ward, dedupes against open alerts (merge or open new), pushes plain-language status back ("Under repair, queue position 3").
+- **IrrigateAI** — district picker, daily irrigation target (mm) vs fixed-schedule baseline, % saved. A low-rainfall signal raises the drought weight LeakSense uses — the cross-module beat.
+- **GovDash** — NRW trend vs the 15% CPHEEO ceiling (India urban average ~38%; global benchmark 15-20%, cited in-app), scheme-alignment checklist for Jal Jeevan Mission / AMRUT 2.0 / Atal Bhujal with a one-line "how WaterWise reports this" each, and an on-screen report view with a stubbed Download button.
 
-Nothing paid gets designed into the architecture.
+## Agentrix trace panel
 
-## UI/UX note
+Every alert and recommendation gets a collapsible six-stage trace filled from `agent_events`: Trigger, Perception, Reasoning, Tool/Action, Memory, Human-in-loop gate. Anything affecting real people (crew dispatch, mass notification, irrigation schedule change) sits in Pending Approval until an operator clicks Approve/Reject.
 
-The document will include a described dashboard layout (operator-first: one alert queue, one map, one trend strip) so the demo and any build stay user-friendly. If you also want me to build the WaterWise dashboard as a working web app afterwards, say so and I'll plan that separately.
+## Routes
 
-## Verification
+| Route | Content |
+| --- | --- |
+| `/` | Pitch, role switcher (Operator / Citizen / Government), Run Demo button |
+| `/operator` | Alert queue + Leaflet/OSM map + trend strip + Agent Trace side panel |
+| `/citizen` | Messaging-style chat, my-ward status card, water-saved counter |
+| `/irrigate` | District picker, weather/ET chart, target vs baseline, % saved badge |
+| `/gov` | NRW trend, scheme checklist, report summary |
+| `/pricing` | Citizen free / Utility SaaS per-connection / Government pilot + roadmap teaser + competitive framing |
+| `/metrics` | Success-criteria table, live values where measurable |
 
-After generating the `.docx` I convert every page to an image and inspect all of them for clipped text, broken tables, bad spacing or ordering, and fix and regenerate until clean.
+Each route gets its own SEO metadata.
+
+## Run Demo
+
+One idempotent button: resets and reseeds the scenario, then fires timed inserts — low-rainfall signal → repair queue reprioritizes with trace open → operator approves → ward notification appears on the Citizen view → second citizen report deduped with ETA → NRW ticks down on GovDash → close on pricing and metrics. Replayable for the next judge.
+
+## Success metrics screen
+
+Leak precision/recall (≥85%/≥80% against injected labels), false-alarm rate (<10%), chatbot intent accuracy (≥90% on a 20-message test set), dashboard p95 latency (<2s, from browser perf timing), irrigation water saved (15-25% vs fixed baseline), alert-to-action time (<5 min). NRW reduction is labeled an industry benchmark (ORF/CPHEEO, JUSCO Jamshedpur 36%→10%), not a WaterWise-measured result.
+
+## Design
+
+Deep teal primary (~#0B6E7A), amber for alerts, near-white background — all as semantic tokens, no generic SaaS blue. Operator view capped at three primary panels above the fold. Citizen view is touch-first, plain language, no jargon. Recharts for trend and comparison charts.
+
+## Explicitly out of scope today (shown on the roadmap screen)
+
+Real hardware integration, payments, multi-tenant auth/billing, the data-licensing revenue line, and real PDF export — listed as 6-month pilot scope, not as gaps.
+
+## Technical notes
+
+TanStack Start + React + Tailwind. Data reads go through route loaders with TanStack Query; agent calls and external APIs run in server functions so no key ever reaches the browser. Leaflet loads client-only after hydration. The simulation writes through the same tables real sensors would, so swapping in hardware is a data-source change, not a rewrite.
