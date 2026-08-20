@@ -139,7 +139,7 @@ function Landing() {
           )}
         </section>
 
-        <section className="mt-14 grid gap-4 md:grid-cols-3">
+        <section className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {roles.map((r) => (
             <Link
               key={r.to}
