@@ -630,3 +630,36 @@ export const runDemoStep = createServerFn({ method: "POST" })
     });
     return { ok: true, stage: "gov" };
   });
+
+/* ------------------------------ pilot requests ---------------------------- */
+
+export const submitPilotRequest = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) =>
+    z
+      .object({
+        name: z.string().min(2).max(120),
+        organisation: z.string().min(2).max(160),
+        role: z.string().max(120).optional(),
+        email: z.string().email().max(160),
+        city: z.string().max(120).optional(),
+        connections: z.string().max(60).optional(),
+        message: z.string().max(1000).optional(),
+        tier: z.enum(["pilot", "municipal", "state"]).default("pilot"),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data }) => {
+    const { admin } = await import("./waterwise.server");
+    const { error } = await admin().from("pilot_requests").insert({
+      name: data.name,
+      organisation: data.organisation,
+      role: data.role ?? null,
+      email: data.email,
+      city: data.city ?? null,
+      connections: data.connections ?? null,
+      message: data.message ?? null,
+      tier: data.tier,
+    });
+    if (error) return { ok: false as const, error: "Could not record the request." };
+    return { ok: true as const };
+  });
