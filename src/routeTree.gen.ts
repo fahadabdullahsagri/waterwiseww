@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CitizenRouteImport } from './routes/citizen'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as GovRouteImport } from './routes/gov'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as IrrigateRouteImport } from './routes/irrigate'
 import { Route as MetricsRouteImport } from './routes/metrics'
 import { Route as OperatorRouteImport } from './routes/operator'
@@ -36,6 +37,11 @@ const ContactRoute = ContactRouteImport.update({
 const GovRoute = GovRouteImport.update({
   id: '/gov',
   path: '/gov',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IrrigateRoute = IrrigateRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/citizen': typeof CitizenRoute
   '/contact': typeof ContactRoute
   '/gov': typeof GovRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/irrigate': typeof IrrigateRoute
   '/metrics': typeof MetricsRoute
   '/operator': typeof OperatorRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/citizen': typeof CitizenRoute
   '/contact': typeof ContactRoute
   '/gov': typeof GovRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/irrigate': typeof IrrigateRoute
   '/metrics': typeof MetricsRoute
   '/operator': typeof OperatorRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/citizen': typeof CitizenRoute
   '/contact': typeof ContactRoute
   '/gov': typeof GovRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/irrigate': typeof IrrigateRoute
   '/metrics': typeof MetricsRoute
   '/operator': typeof OperatorRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/citizen'
     | '/contact'
     | '/gov'
+    | '/how-it-works'
     | '/irrigate'
     | '/metrics'
     | '/operator'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/citizen'
     | '/contact'
     | '/gov'
+    | '/how-it-works'
     | '/irrigate'
     | '/metrics'
     | '/operator'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/citizen'
     | '/contact'
     | '/gov'
+    | '/how-it-works'
     | '/irrigate'
     | '/metrics'
     | '/operator'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   CitizenRoute: typeof CitizenRoute
   ContactRoute: typeof ContactRoute
   GovRoute: typeof GovRoute
+  HowItWorksRoute: typeof HowItWorksRoute
   IrrigateRoute: typeof IrrigateRoute
   MetricsRoute: typeof MetricsRoute
   OperatorRoute: typeof OperatorRoute
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/gov'
       fullPath: '/gov'
       preLoaderRoute: typeof GovRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/irrigate': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   CitizenRoute: CitizenRoute,
   ContactRoute: ContactRoute,
   GovRoute: GovRoute,
+  HowItWorksRoute: HowItWorksRoute,
   IrrigateRoute: IrrigateRoute,
   MetricsRoute: MetricsRoute,
   OperatorRoute: OperatorRoute,

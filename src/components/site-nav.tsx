@@ -7,6 +7,7 @@ const links = [
   { to: "/citizen", label: "Citizen" },
   { to: "/irrigate", label: "IrrigateAI" },
   { to: "/gov", label: "Government" },
+  { to: "/how-it-works", label: "How it works" },
   { to: "/metrics", label: "Metrics" },
   { to: "/pricing", label: "Pricing" },
 ] as const;
@@ -37,12 +38,12 @@ export function SiteNav({
             Agentrix
           </span>
         </Link>
-        <nav className="flex flex-wrap items-center gap-1 text-sm">
+        <nav className="-mx-1 flex w-full items-center gap-1 overflow-x-auto px-1 text-sm [scrollbar-width:none] sm:w-auto sm:overflow-visible">
           {links.map((l) => (
             <Link
               key={l.to}
               to={l.to}
-              className="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="shrink-0 whitespace-nowrap rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               activeProps={{ className: "bg-primary/12 text-primary font-medium" }}
             >
               {l.label}
