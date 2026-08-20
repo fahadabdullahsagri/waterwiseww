@@ -196,6 +196,39 @@ export type Database = {
           },
         ]
       }
+      household_entries: {
+        Row: {
+          category: string
+          created_at: string
+          entry_date: string
+          household_id: string
+          id: string
+          is_demo: boolean
+          litres: number
+          note: string | null
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          entry_date: string
+          household_id: string
+          id?: string
+          is_demo?: boolean
+          litres: number
+          note?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          entry_date?: string
+          household_id?: string
+          id?: string
+          is_demo?: boolean
+          litres?: number
+          note?: string | null
+        }
+        Relationships: []
+      }
       irrigation_districts: {
         Row: {
           created_at: string
