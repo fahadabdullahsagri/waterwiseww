@@ -84,8 +84,17 @@ function OperatorPage() {
   ).length;
 
   return (
-    <div className="min-h-screen">
-      <SiteNav />
+    <div className="control-room min-h-screen bg-background text-foreground">
+      <SiteNav
+        alertCount={alerts.length}
+        loading={!data}
+        intensity={Math.min(1, alerts.length / 8)}
+        right={
+          <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {new Date().toISOString().slice(11, 16)} UTC · live feed
+          </span>
+        }
+      />
       <main className="mx-auto max-w-7xl px-4 py-6">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
