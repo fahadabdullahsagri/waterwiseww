@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { FlowLine } from "@/components/flow-line";
 
 const links = [
+  { to: "/household", label: "My water" },
   { to: "/operator", label: "Operator" },
   { to: "/citizen", label: "Citizen" },
   { to: "/irrigate", label: "IrrigateAI" },
@@ -11,6 +12,7 @@ const links = [
   { to: "/metrics", label: "Metrics" },
   { to: "/pricing", label: "Pricing" },
 ] as const;
+
 
 export function SiteNav({
   intensity = 0.3,
