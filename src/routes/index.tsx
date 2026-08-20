@@ -117,6 +117,13 @@ function Landing() {
             >
               Open Operator view
             </Link>
+            <Link
+              to="/contact"
+              search={{ tier: "pilot" as const }}
+              className="rounded-lg px-5 py-3 text-sm font-semibold text-primary hover:underline"
+            >
+              Start a free 90-day pilot →
+            </Link>
           </div>
           {status && (
             <p className="mt-4 rounded-lg border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
