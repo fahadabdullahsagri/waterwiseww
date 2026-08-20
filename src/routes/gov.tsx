@@ -75,11 +75,19 @@ function GovPage() {
   return (
     <div className="min-h-screen">
       <SiteNav />
-      <main className="mx-auto max-w-6xl px-4 py-6">
-        <h1 className="text-2xl font-semibold">Government & utility oversight</h1>
-        <p className="text-sm text-muted-foreground">
-          Every number here is reproducible from the audit trail below — no black-box scores.
-        </p>
+      <main className="mx-auto max-w-5xl px-6 py-10 sm:px-10">
+        <div className="border-y border-hair py-6">
+          <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+            WaterWise · Municipal water report
+          </div>
+          <h1 className="mt-3 text-3xl font-semibold">Government &amp; utility oversight</h1>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            Every number here is reproducible from the audit trail below — no black-box scores.
+          </p>
+          <div className="mt-4 font-mono text-[11px] text-muted-foreground">
+            Prepared {new Date().toISOString().slice(0, 10)} · Demo city · 6 wards
+          </div>
+        </div>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-4">
           <Card label="Current NRW" value={latest ? `${latest.nrw}%` : "–"} />
