@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Droplets, Radio, MessageSquare, Sprout, Landmark, Play, Loader2 } from "lucide-react";
 
 import { SiteNav } from "@/components/site-nav";
+import { SiteFooter } from "@/components/site-footer";
 import { runDemoStep } from "@/lib/waterwise.functions";
 
 export const Route = createFileRoute("/")({
@@ -83,9 +84,9 @@ function Landing() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <SiteNav />
-      <main className="mx-auto max-w-7xl px-4 py-14">
+      <main className="mx-auto w-full flex-1 max-w-7xl px-4 py-14">
         <section className="max-w-3xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
             <Droplets className="size-3.5 text-primary" />
@@ -180,6 +181,7 @@ function Landing() {
           change, not a rewrite. Weather and evapotranspiration are real, live, keyless API calls.
         </p>
       </main>
+      <SiteFooter />
     </div>
   );
 }

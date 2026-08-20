@@ -13,6 +13,7 @@ import {
 } from "recharts";
 
 import { SiteNav } from "@/components/site-nav";
+import { SiteFooter } from "@/components/site-footer";
 import { AgentTrace, type AgentEvent } from "@/components/agent-trace";
 import { irrigationQuery } from "@/lib/queries";
 
@@ -48,9 +49,9 @@ function IrrigatePage() {
   }));
 
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <SiteNav />
-      <main className="mx-auto max-w-6xl px-4 py-6">
+      <main className="mx-auto w-full flex-1 max-w-6xl px-4 py-6">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h1 className="text-2xl font-semibold">IrrigateAI</h1>
@@ -148,6 +149,7 @@ function IrrigatePage() {
           </>
         )}
       </main>
+      <SiteFooter />
     </div>
   );
 }
