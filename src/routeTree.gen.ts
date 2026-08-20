@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CitizenRouteImport } from './routes/citizen'
+import { Route as GovRouteImport } from './routes/gov'
+import { Route as IrrigateRouteImport } from './routes/irrigate'
+import { Route as MetricsRouteImport } from './routes/metrics'
+import { Route as OperatorRouteImport } from './routes/operator'
+import { Route as PricingRouteImport } from './routes/pricing'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CitizenRoute = CitizenRouteImport.update({
+  id: '/citizen',
+  path: '/citizen',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GovRoute = GovRouteImport.update({
+  id: '/gov',
+  path: '/gov',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IrrigateRoute = IrrigateRouteImport.update({
+  id: '/irrigate',
+  path: '/irrigate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MetricsRoute = MetricsRouteImport.update({
+  id: '/metrics',
+  path: '/metrics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OperatorRoute = OperatorRouteImport.update({
+  id: '/operator',
+  path: '/operator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/citizen': typeof CitizenRoute
+  '/gov': typeof GovRoute
+  '/irrigate': typeof IrrigateRoute
+  '/metrics': typeof MetricsRoute
+  '/operator': typeof OperatorRoute
+  '/pricing': typeof PricingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/citizen': typeof CitizenRoute
+  '/gov': typeof GovRoute
+  '/irrigate': typeof IrrigateRoute
+  '/metrics': typeof MetricsRoute
+  '/operator': typeof OperatorRoute
+  '/pricing': typeof PricingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/citizen': typeof CitizenRoute
+  '/gov': typeof GovRoute
+  '/irrigate': typeof IrrigateRoute
+  '/metrics': typeof MetricsRoute
+  '/operator': typeof OperatorRoute
+  '/pricing': typeof PricingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/citizen'
+    | '/gov'
+    | '/irrigate'
+    | '/metrics'
+    | '/operator'
+    | '/pricing'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/citizen'
+    | '/gov'
+    | '/irrigate'
+    | '/metrics'
+    | '/operator'
+    | '/pricing'
+  id:
+    | '__root__'
+    | '/'
+    | '/citizen'
+    | '/gov'
+    | '/irrigate'
+    | '/metrics'
+    | '/operator'
+    | '/pricing'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CitizenRoute: typeof CitizenRoute
+  GovRoute: typeof GovRoute
+  IrrigateRoute: typeof IrrigateRoute
+  MetricsRoute: typeof MetricsRoute
+  OperatorRoute: typeof OperatorRoute
+  PricingRoute: typeof PricingRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/citizen': {
+      id: '/citizen'
+      path: '/citizen'
+      fullPath: '/citizen'
+      preLoaderRoute: typeof CitizenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gov': {
+      id: '/gov'
+      path: '/gov'
+      fullPath: '/gov'
+      preLoaderRoute: typeof GovRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/irrigate': {
+      id: '/irrigate'
+      path: '/irrigate'
+      fullPath: '/irrigate'
+      preLoaderRoute: typeof IrrigateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/metrics': {
+      id: '/metrics'
+      path: '/metrics'
+      fullPath: '/metrics'
+      preLoaderRoute: typeof MetricsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/operator': {
+      id: '/operator'
+      path: '/operator'
+      fullPath: '/operator'
+      preLoaderRoute: typeof OperatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CitizenRoute: CitizenRoute,
+  GovRoute: GovRoute,
+  IrrigateRoute: IrrigateRoute,
+  MetricsRoute: MetricsRoute,
+  OperatorRoute: OperatorRoute,
+  PricingRoute: PricingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
