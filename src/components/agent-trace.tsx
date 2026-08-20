@@ -1,5 +1,15 @@
 import { useState } from "react";
-import { ChevronDown, Brain, Eye, Zap, Wrench, Database, ShieldCheck } from "lucide-react";
+import {
+  ChevronDown,
+  Brain,
+  Eye,
+  Zap,
+  Wrench,
+  Database,
+  ShieldCheck,
+  AlertTriangle,
+  Check,
+} from "lucide-react";
 
 export type AgentEvent = {
   id: string;
