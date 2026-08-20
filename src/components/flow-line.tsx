@@ -27,6 +27,7 @@ export function FlowLine({
       return () => clearTimeout(t);
     }
     prev.current = alertCount;
+    return undefined;
   }, [alertCount]);
 
   const i = Math.min(1, Math.max(0, intensity));
