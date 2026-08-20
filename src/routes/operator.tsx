@@ -13,6 +13,10 @@ import {
 } from "recharts";
 
 import { SiteNav } from "@/components/site-nav";
+import { SiteFooter } from "@/components/site-footer";
+import { OfficerBadge } from "@/components/officer-badge";
+import { useEnsureDemo } from "@/hooks/use-ensure-demo";
+import { getOfficer } from "@/lib/officer";
 import { AgentTrace, type AgentEvent } from "@/components/agent-trace";
 import { operatorQuery } from "@/lib/queries";
 import { approveEvent } from "@/lib/waterwise.functions";
@@ -45,8 +49,13 @@ function OperatorPage() {
   const queryClient = useQueryClient();
   const [selected, setSelected] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [officer, setOfficerState] = useState<string | null>(null);
+  const [needsOfficer, setNeedsOfficer] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+    setOfficerState(getOfficer());
+  }, []);
 
   const alerts = data?.alerts ?? [];
   const wards = new Map((data?.wards ?? []).map((w) => [w.id as string, w]));
@@ -75,27 +84,39 @@ function OperatorPage() {
   ];
 
   async function onApprove(eventId: string, ok: boolean) {
-    await approve({ data: { eventId, approve: ok } });
+    const who = officer ?? getOfficer();
+    if (!who) {
+      setNeedsOfficer(true);
+      return;
+    }
+    await approve({ data: { eventId, approve: ok, officer: who } });
     await queryClient.invalidateQueries();
   }
+
+  const seeding = useEnsureDemo(data ? alerts.length : undefined);
 
   const pending = events.filter(
     (e) => e.requires_human_approval && e.approval_status === "pending",
   ).length;
 
   return (
-    <div className="control-room min-h-screen bg-background text-foreground">
+    <div className="control-room flex min-h-screen flex-col bg-background text-foreground">
       <SiteNav
         alertCount={alerts.length}
-        loading={!data}
+        loading={!data || seeding}
         intensity={Math.min(1, alerts.length / 8)}
         right={
-          <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            {new Date().toISOString().slice(11, 16)} UTC · live feed
-          </span>
+          <OfficerBadge
+            officer={officer}
+            highlight={needsOfficer}
+            onChange={(name) => {
+              setOfficerState(name);
+              setNeedsOfficer(false);
+            }}
+          />
         }
       />
-      <main className="mx-auto max-w-7xl px-4 py-6">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h1 className="text-2xl font-semibold">Operator control room</h1>
@@ -136,7 +157,9 @@ function OperatorPage() {
                   {alerts.length === 0 && (
                     <tr>
                       <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
-                        No incidents yet — press “Run the 4-minute demo” on the landing page.
+                        {seeding
+                          ? "Seeding the demo city — sensors, leaks and agent decisions are being written now…"
+                          : "No incidents yet — press “Run the 4-minute demo” on the landing page."}
                       </td>
                     </tr>
                   )}
@@ -261,6 +284,7 @@ function OperatorPage() {
           </div>
         </section>
       </main>
+      <SiteFooter />
     </div>
   );
 }

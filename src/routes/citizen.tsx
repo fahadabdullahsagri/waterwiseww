@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Send, Loader2, Bell, Droplets } from "lucide-react";
 
 import { SiteNav } from "@/components/site-nav";
+import { SiteFooter } from "@/components/site-footer";
 import { citizenQuery } from "@/lib/queries";
 import { submitCitizenReport } from "@/lib/waterwise.functions";
 
@@ -74,7 +75,7 @@ function CitizenPage() {
   const litres = data?.litresSaved ?? 0;
 
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <SiteNav />
       <main className="mx-auto grid max-w-5xl gap-4 px-4 py-6 lg:grid-cols-[1.3fr_1fr]">
         <section className="flex h-[600px] flex-col rounded-2xl border border-border bg-card">
@@ -193,6 +194,7 @@ function CitizenPage() {
           </section>
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

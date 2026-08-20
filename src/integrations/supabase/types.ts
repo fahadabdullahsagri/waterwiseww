@@ -21,6 +21,7 @@ export type Database = {
           alert_id: string | null
           approval_status: string
           approved_at: string | null
+          approved_by: string | null
           confidence: number
           created_at: string
           decision: string
@@ -37,6 +38,7 @@ export type Database = {
           alert_id?: string | null
           approval_status?: string
           approved_at?: string | null
+          approved_by?: string | null
           confidence?: number
           created_at?: string
           decision?: string
@@ -53,6 +55,7 @@ export type Database = {
           alert_id?: string | null
           approval_status?: string
           approved_at?: string | null
+          approved_by?: string | null
           confidence?: number
           created_at?: string
           decision?: string
@@ -286,6 +289,45 @@ export type Database = {
           litres_saved?: number
           month?: string
           nrw_percent?: number
+        }
+        Relationships: []
+      }
+      pilot_requests: {
+        Row: {
+          city: string | null
+          connections: string | null
+          created_at: string
+          email: string
+          id: string
+          message: string | null
+          name: string
+          organisation: string
+          role: string | null
+          tier: string
+        }
+        Insert: {
+          city?: string | null
+          connections?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          organisation: string
+          role?: string | null
+          tier?: string
+        }
+        Update: {
+          city?: string | null
+          connections?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          organisation?: string
+          role?: string | null
+          tier?: string
         }
         Relationships: []
       }

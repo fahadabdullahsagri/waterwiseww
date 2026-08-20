@@ -12,6 +12,8 @@ import {
 } from "recharts";
 
 import { SiteNav } from "@/components/site-nav";
+import { SiteFooter } from "@/components/site-footer";
+import { Download } from "lucide-react";
 import { govQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/gov")({
@@ -72,10 +74,40 @@ function GovPage() {
   const events = data?.events ?? [];
   const approved = events.filter((e) => e.approval_status === "approved").length;
 
+  function download(kind: "nrw" | "audit") {
+    const rows =
+      kind === "nrw"
+        ? [
+            ["month", "nrw_percent", "litres_saved_thousands"],
+            ...nrw.map((r) => [r.month, String(r.nrw), String(r.saved)]),
+          ]
+        : [
+            ["timestamp", "agent", "trigger", "decision", "confidence", "approval_status", "approved_by"],
+            ...events.map((e) => [
+              String(e.created_at ?? ""),
+              String(e.agent ?? ""),
+              String(e.trigger ?? ""),
+              String(e.decision ?? ""),
+              String(e.confidence ?? ""),
+              String(e.approval_status ?? ""),
+              String((e as { approved_by?: string }).approved_by ?? ""),
+            ]),
+          ];
+    const csv = rows
+      .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `waterwise-${kind}-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <SiteNav />
-      <main className="mx-auto max-w-5xl px-6 py-10 sm:px-10">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10 sm:px-10">
         <div className="border-y border-hair py-6">
           <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
             WaterWise · Municipal water report
@@ -84,8 +116,26 @@ function GovPage() {
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
             Every number here is reproducible from the audit trail below — no black-box scores.
           </p>
-          <div className="mt-4 font-mono text-[11px] text-muted-foreground">
-            Prepared {new Date().toISOString().slice(0, 10)} · Demo city · 6 wards
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+            <div className="font-mono text-[11px] text-muted-foreground">
+              Prepared {new Date().toISOString().slice(0, 10)} · Demo city · 6 wards
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => download("nrw")}
+                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+              >
+                <Download className="size-3.5" aria-hidden="true" />
+                Export NRW series (CSV)
+              </button>
+              <button
+                onClick={() => download("audit")}
+                className="inline-flex items-center gap-2 rounded-lg border border-hair bg-card px-4 py-2 text-xs font-semibold hover:bg-muted"
+              >
+                <Download className="size-3.5" aria-hidden="true" />
+                Export audit trail (CSV)
+              </button>
+            </div>
           </div>
         </div>
 
@@ -176,6 +226,7 @@ function GovPage() {
           </ul>
         </section>
       </main>
+      <SiteFooter />
     </div>
   );
 }

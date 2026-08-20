@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { SiteNav } from "@/components/site-nav";
+import { SiteFooter } from "@/components/site-footer";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -23,6 +24,8 @@ export const Route = createFileRoute("/pricing")({
 
 const tiers = [
   {
+    id: "pilot" as const,
+    cta: "Start the free pilot",
     name: "Pilot",
     price: "₹0",
     unit: "for 90 days, one ward",
@@ -33,6 +36,8 @@ const tiers = [
     ],
   },
   {
+    id: "municipal" as const,
+    cta: "Talk to us about a licence",
     name: "Municipal",
     price: "₹18",
     unit: "per connection / year",
@@ -45,6 +50,8 @@ const tiers = [
     featured: true,
   },
   {
+    id: "state" as const,
+    cta: "Plan a multi-city rollout",
     name: "State / utility group",
     price: "Custom",
     unit: "multi-city rollout",
@@ -66,10 +73,10 @@ const risks = [
 
 function PricingPage() {
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <SiteNav />
-      <main className="mx-auto max-w-6xl px-4 py-6">
-        <h1 className="text-2xl font-semibold">Business model, impact & roadmap</h1>
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">
+        <h1 className="text-2xl font-semibold">Business model, impact &amp; roadmap</h1>
 
         <section className="mt-5 grid gap-3 sm:grid-cols-3">
           {[
@@ -106,6 +113,17 @@ function PricingPage() {
                   </li>
                 ))}
               </ul>
+              <Link
+                to="/contact"
+                search={{ tier: t.id }}
+                className={`mt-5 block rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition-colors ${
+                  t.featured
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                    : "border border-border bg-card hover:bg-muted"
+                }`}
+              >
+                {t.cta}
+              </Link>
             </div>
           ))}
         </section>
@@ -165,7 +183,22 @@ function PricingPage() {
             </ul>
           </div>
         </section>
+        <section className="mt-10 rounded-2xl border border-primary/40 bg-primary/5 p-8 text-center">
+          <h2 className="text-xl font-semibold">Ninety days, one ward, no licence fee</h2>
+          <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">
+            The pilot ends with a baseline non-revenue-water audit — the document that usually
+            justifies the procurement in the first place.
+          </p>
+          <Link
+            to="/contact"
+            search={{ tier: "pilot" as const }}
+            className="mt-5 inline-block rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            Start a pilot
+          </Link>
+        </section>
       </main>
+      <SiteFooter />
     </div>
   );
 }

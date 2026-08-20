@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { SiteNav } from "@/components/site-nav";
+import { SiteFooter } from "@/components/site-footer";
 import { metricsQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/metrics")({
@@ -91,9 +92,9 @@ function MetricsPage() {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <SiteNav />
-      <main className="mx-auto max-w-6xl px-4 py-6">
+      <main className="mx-auto w-full flex-1 max-w-6xl px-4 py-6">
         <h1 className="text-2xl font-semibold">Measurable success criteria</h1>
         <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
           Every claim in the proposal maps to a number here, and every number is computed from the
@@ -130,6 +131,7 @@ function MetricsPage() {
           irrigation schedule, and manual complaint triage with no deduplication.
         </p>
       </main>
+      <SiteFooter />
     </div>
   );
 }
