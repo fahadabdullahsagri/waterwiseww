@@ -97,7 +97,9 @@ export async function absorptionEstimate(
     excessLitres <= 0 ? "under" : excessPct > 40 ? "over" : "normal";
 
   const conservationImpact =
-    verdict === "over"
+    recommendedLitres === 0
+      ? `This ground needs nothing today${rain24h > 1 ? ` — ${rain24h.toFixed(1)} mm of rain already did the job` : ""}. A normal watering run would add about ${typicalLitres.toLocaleString()} L that the soil cannot take: it runs straight off, carries fertiliser into drains and spends treated water the network is already losing to leaks. Skipping today alone saves ${typicalLitres.toLocaleString()} L.`
+      : verdict === "over"
       ? `Watering as usual puts about ${excessLitres.toLocaleString()} L more than this ground can absorb — roughly ${excessPct}% over need, or ${(excessLitres * 7).toLocaleString()} L a week. That surplus does not reach the roots: it runs off, carries fertiliser into drains and pushes demand onto a supply the network is already losing to leaks.`
       : verdict === "normal"
         ? `Watering as usual adds about ${excessLitres.toLocaleString()} L over the ${recommendedLitres.toLocaleString()} L this soil needs today. Trimming that back is a painless ${(excessLitres * 30).toLocaleString()} L saved a month.`

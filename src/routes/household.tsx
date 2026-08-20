@@ -341,8 +341,8 @@ function AbsorptionPanel() {
             <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
               Remaining storage
             </p>
-            <p className="mt-1 font-display text-2xl font-semibold capitalize">
-              {r.storageMm} mm · {r.capacity}
+            <p className="mt-1 font-display text-2xl font-semibold">
+              {r.storageMm} mm · <span className="capitalize">{r.capacity}</span>
             </p>
           </div>
 
