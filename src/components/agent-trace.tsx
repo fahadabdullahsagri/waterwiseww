@@ -53,19 +53,25 @@ export function AgentTrace({
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center gap-3 px-4 py-3 text-left"
       >
-        <span className="rounded-md bg-primary/10 px-2 py-1 font-mono text-[11px] font-semibold text-primary">
+        <span className="flex items-center gap-1.5 rounded-sm border border-border px-2 py-1 font-mono text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+          <span
+            className={`size-1.5 rounded-full ${pending ? "bg-warning" : "bg-primary"}`}
+            aria-hidden="true"
+          />
           {event.agent}
         </span>
         <span className="flex-1 truncate text-sm text-foreground">{event.trigger}</span>
-        <span className="hidden text-xs text-muted-foreground sm:inline">
+        <span className="hidden font-mono text-xs text-muted-foreground sm:inline">
           {Math.round(event.confidence * 100)}% conf
         </span>
         {pending ? (
-          <span className="rounded-full bg-warning/15 px-2 py-0.5 text-[11px] font-medium text-warning-foreground">
-            Pending approval
+          <span className="flex items-center gap-1 rounded-sm bg-warning/15 px-2 py-0.5 text-[11px] font-medium text-warning-foreground">
+            <AlertTriangle className="size-3" aria-hidden="true" />
+            Needs approval
           </span>
         ) : (
-          <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
+          <span className="flex items-center gap-1 rounded-sm bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
+            <Check className="size-3" aria-hidden="true" />
             {event.approval_status === "auto" ? "Auto" : event.approval_status}
           </span>
         )}
