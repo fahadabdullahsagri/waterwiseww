@@ -76,9 +76,16 @@ export const seedHouseholdHistory = createServerFn({ method: "POST" })
  */
 export const estimateAbsorption = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) =>
-    z.object({ lat: z.number().min(-90).max(90), lng: z.number().min(-180).max(180) }).parse(d),
+    z
+      .object({
+        lat: z.number().min(-90).max(90),
+        lng: z.number().min(-180).max(180),
+        areaSqm: z.number().min(1).max(5000).optional(),
+      })
+      .parse(d),
   )
   .handler(async ({ data }) => {
     const { absorptionEstimate } = await import("./household.server");
-    return absorptionEstimate(data.lat, data.lng);
+    return absorptionEstimate(data.lat, data.lng, data.areaSqm ?? 50);
   });
+

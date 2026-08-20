@@ -241,12 +241,15 @@ function HouseholdPage() {
 function AbsorptionPanel() {
   const estimate = useServerFn(estimateAbsorption);
   const [error, setError] = useState<string | null>(null);
+  const [area, setArea] = useState("50");
   const mutation = useMutation({
-    mutationFn: (coords: { lat: number; lng: number }) => estimate({ data: coords }),
+    mutationFn: (coords: { lat: number; lng: number; areaSqm: number }) =>
+      estimate({ data: coords }),
   });
 
   function locate() {
     setError(null);
+    const areaSqm = Math.max(1, Math.min(5000, Number(area) || 50));
     if (!("geolocation" in navigator)) {
       setError("This browser can't share a location.");
       return;
@@ -257,12 +260,19 @@ function AbsorptionPanel() {
           // Rounded before it leaves the browser — roughly a 1 km grid cell.
           lat: Math.round(pos.coords.latitude * 100) / 100,
           lng: Math.round(pos.coords.longitude * 100) / 100,
+          areaSqm,
         }),
       () => setError("Location permission was declined — nothing was sent."),
     );
   }
 
   const r = mutation.data;
+  const verdictTone =
+    r?.plan.verdict === "over"
+      ? "border-destructive/40 bg-destructive/5"
+      : r?.plan.verdict === "normal"
+        ? "border-warning/40 bg-warning/10"
+        : "border-primary/30 bg-primary/5";
 
   return (
     <section className="mt-6 rounded-2xl border border-border bg-card p-6">
@@ -270,15 +280,27 @@ function AbsorptionPanel() {
         Location intelligence
       </span>
       <h2 className="mt-3 font-display text-2xl font-semibold">
-        Understand the ground beneath your water.
+        Soil quality and absorption where you are.
       </h2>
       <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-        Use your live location to estimate how much water the local soil can still hold, then turn
-        that signal into a smarter watering plan. Same live weather feed IrrigateAI uses on the
-        farm side.
+        Your live location tells us what the ground beneath you behaves like, how much water it can
+        still absorb today, and how far a normal watering run overshoots that. Same keyless weather
+        feed IrrigateAI uses on the farm side.
       </p>
 
-      <div className="mt-5 flex flex-wrap items-center gap-3">
+      <div className="mt-5 flex flex-wrap items-end gap-3">
+        <label className="flex flex-col gap-1">
+          <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+            Area watered (m²)
+          </span>
+          <input
+            value={area}
+            onChange={(e) => setArea(e.target.value)}
+            inputMode="numeric"
+            aria-label="Area watered in square metres"
+            className="w-32 rounded-lg border border-input bg-card px-3 py-2.5 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          />
+        </label>
         <button
           onClick={locate}
           disabled={mutation.isPending}
@@ -289,9 +311,9 @@ function AbsorptionPanel() {
           ) : (
             <MapPin className="size-4" />
           )}
-          Estimate absorption here
+          Check my soil &amp; water need
         </button>
-        <span className="text-xs text-muted-foreground">
+        <span className="max-w-sm text-xs text-muted-foreground">
           A 250 m soil-storage proxy, not a field infiltration test. Your precise coordinates are
           never stored.
         </span>
@@ -319,10 +341,56 @@ function AbsorptionPanel() {
             <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
               Remaining storage
             </p>
-            <p className="mt-1 font-display text-2xl font-semibold capitalize">
-              {r.storageMm} mm · {r.capacity}
+            <p className="mt-1 font-display text-2xl font-semibold">
+              {r.storageMm} mm · <span className="capitalize">{r.capacity}</span>
             </p>
           </div>
+
+          <div className="rounded-xl border border-border p-4 sm:col-span-3">
+            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+              Soil quality
+            </p>
+            <p className="mt-1 font-display text-xl font-semibold">{r.soilQuality.label}</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Absorbs about {r.soilQuality.infiltrationMmPerHour} mm per hour · holds water{" "}
+              {r.soilQuality.holdsWater} · runoff risk {r.plan.runoffRiskPct}%
+            </p>
+            <p className="mt-2 text-sm">{r.soilQuality.note}</p>
+          </div>
+
+          <div className="rounded-xl border border-border p-4">
+            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+              Needed today
+            </p>
+            <p className="mt-1 font-display text-2xl font-semibold">
+              {r.plan.recommendedLitres.toLocaleString()} L
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">For {r.plan.areaSqm} m²</p>
+          </div>
+          <div className="rounded-xl border border-border p-4">
+            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+              A normal watering run
+            </p>
+            <p className="mt-1 font-display text-2xl font-semibold">
+              {r.plan.typicalLitres.toLocaleString()} L
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">Habit-sized, not soil-sized</p>
+          </div>
+          <div className="rounded-xl border border-border p-4">
+            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+              Wasted if unchanged
+            </p>
+            <p className="mt-1 font-display text-2xl font-semibold text-destructive">
+              {r.plan.excessLitres.toLocaleString()} L
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {r.plan.excessPct}% above what the ground can take
+            </p>
+          </div>
+
+          <p className={`sm:col-span-3 rounded-xl border p-4 text-sm ${verdictTone}`}>
+            {r.plan.conservationImpact}
+          </p>
           <p className="sm:col-span-3 rounded-xl border border-primary/30 bg-primary/5 p-4 text-sm">
             {r.advice}
           </p>
@@ -331,3 +399,4 @@ function AbsorptionPanel() {
     </section>
   );
 }
+
