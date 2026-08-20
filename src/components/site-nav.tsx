@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Droplets } from "lucide-react";
+
+import { FlowLine } from "@/components/flow-line";
 
 const links = [
   { to: "/operator", label: "Operator" },
@@ -10,16 +11,29 @@ const links = [
   { to: "/pricing", label: "Pricing" },
 ] as const;
 
-export function SiteNav() {
+export function SiteNav({
+  intensity = 0.3,
+  alertCount = 0,
+  loading = false,
+  right,
+}: {
+  intensity?: number;
+  alertCount?: number;
+  loading?: boolean;
+  right?: React.ReactNode;
+}) {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-card/90 backdrop-blur">
+    <header className="sticky top-0 z-40 bg-card/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
-        <Link to="/" className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight">
-          <span className="grid size-8 place-items-center rounded-lg bg-primary text-primary-foreground">
-            <Droplets className="size-4" />
+        <Link
+          to="/"
+          className="flex items-center gap-2 font-display text-[17px] font-semibold tracking-tight"
+        >
+          <span className="grid size-7 place-items-center rounded-md bg-primary">
+            <span className="block h-3 w-[3px] rounded-full bg-primary-foreground" />
           </span>
           WaterWise
-          <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
+          <span className="rounded-sm border border-border px-1.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
             Agentrix
           </span>
         </Link>
@@ -29,13 +43,15 @@ export function SiteNav() {
               key={l.to}
               to={l.to}
               className="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              activeProps={{ className: "bg-primary/10 text-primary font-medium" }}
+              activeProps={{ className: "bg-primary/12 text-primary font-medium" }}
             >
               {l.label}
             </Link>
           ))}
         </nav>
+        {right ? <div className="ml-auto flex items-center gap-2">{right}</div> : null}
       </div>
+      <FlowLine intensity={intensity} alertCount={alertCount} loading={loading} />
     </header>
   );
 }

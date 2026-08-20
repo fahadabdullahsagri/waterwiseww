@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -46,7 +46,7 @@ function OperatorPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  if (typeof window !== "undefined" && !mounted) setTimeout(() => setMounted(true), 0);
+  useEffect(() => setMounted(true), []);
 
   const alerts = data?.alerts ?? [];
   const wards = new Map((data?.wards ?? []).map((w) => [w.id as string, w]));
@@ -84,8 +84,17 @@ function OperatorPage() {
   ).length;
 
   return (
-    <div className="min-h-screen">
-      <SiteNav />
+    <div className="control-room min-h-screen bg-background text-foreground">
+      <SiteNav
+        alertCount={alerts.length}
+        loading={!data}
+        intensity={Math.min(1, alerts.length / 8)}
+        right={
+          <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {new Date().toISOString().slice(11, 16)} UTC · live feed
+          </span>
+        }
+      />
       <main className="mx-auto max-w-7xl px-4 py-6">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
