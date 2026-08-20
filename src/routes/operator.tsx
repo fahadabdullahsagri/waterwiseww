@@ -94,7 +94,6 @@ function OperatorPage() {
   }
 
   const seeding = useEnsureDemo(data ? alerts.length : undefined);
-  void seeding;
 
   const pending = events.filter(
     (e) => e.requires_human_approval && e.approval_status === "pending",
@@ -104,7 +103,7 @@ function OperatorPage() {
     <div className="control-room flex min-h-screen flex-col bg-background text-foreground">
       <SiteNav
         alertCount={alerts.length}
-        loading={!data}
+        loading={!data || seeding}
         intensity={Math.min(1, alerts.length / 8)}
         right={
           <OfficerBadge
@@ -158,7 +157,9 @@ function OperatorPage() {
                   {alerts.length === 0 && (
                     <tr>
                       <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
-                        No incidents yet — press “Run the 4-minute demo” on the landing page.
+                        {seeding
+                          ? "Seeding the demo city — sensors, leaks and agent decisions are being written now…"
+                          : "No incidents yet — press “Run the 4-minute demo” on the landing page."}
                       </td>
                     </tr>
                   )}

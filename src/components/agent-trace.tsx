@@ -117,7 +117,7 @@ export function AgentTrace({
                   )}
                 </div>
               ) : event.requires_human_approval ? (
-                `Human ${event.approval_status} this action.`
+                `${(event as { approved_by?: string | null }).approved_by ?? "A human"} ${event.approval_status} this action.`
               ) : (
                 "No human gate required — advisory only, nothing dispatched."
               )
