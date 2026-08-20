@@ -30,6 +30,12 @@ export const Route = createFileRoute("/")({
 
 const roles = [
   {
+    to: "/household",
+    icon: Droplets,
+    title: "Household",
+    body: "Log a daily meter reading and get same-day wastage detection, a conservation score and a soil-aware watering plan.",
+  },
+  {
     to: "/operator",
     icon: Radio,
     title: "Utility Operator",
@@ -48,6 +54,7 @@ const roles = [
     body: "Non-revenue-water trend against the CPHEEO 15% ceiling, mapped to JJM, AMRUT 2.0 and Atal Bhujal.",
   },
 ] as const;
+
 
 const steps = [
   "Resetting the demo city and seeding leak events…",
