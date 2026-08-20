@@ -206,7 +206,13 @@ export const getIrrigation = createServerFn({ method: "GET" })
 
 export const approveEvent = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) =>
-    z.object({ eventId: z.string().uuid(), approve: z.boolean() }).parse(d),
+    z
+      .object({
+        eventId: z.string().uuid(),
+        approve: z.boolean(),
+        officer: z.string().min(2).max(120),
+      })
+      .parse(d),
   )
   .handler(async ({ data }) => {
     const { admin } = await import("./waterwise.server");
@@ -223,6 +229,7 @@ export const approveEvent = createServerFn({ method: "POST" })
       .update({
         approval_status: data.approve ? "approved" : "rejected",
         approved_at: new Date().toISOString(),
+        approved_by: data.officer,
       })
       .eq("id", data.eventId);
 
