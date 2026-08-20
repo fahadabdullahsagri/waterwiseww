@@ -96,8 +96,8 @@ function GovPage() {
           <Card label="Agent actions on record" value={`${events.length} (${approved} approved)`} />
         </div>
 
-        <section className="mt-4 rounded-2xl border border-border bg-card p-4">
-          <h2 className="text-sm font-semibold">Non-revenue water — 12-month trend</h2>
+        <section className="mt-4 rounded-2xl border border-hair bg-card p-4">
+          <h2 className="text-sm font-semibold"><span className="font-mono text-muted-foreground">1. </span>Non-revenue water — 12-month trend</h2>
           <div className="mt-3 h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={nrw}>
@@ -130,9 +130,9 @@ function GovPage() {
           </div>
         </section>
 
-        <section className="mt-4 overflow-hidden rounded-2xl border border-border bg-card">
-          <h2 className="border-b border-border px-4 py-3 text-sm font-semibold">
-            Scheme alignment & evidence produced
+        <section className="mt-4 overflow-hidden rounded-2xl border border-hair bg-card">
+          <h2 className="border-b border-hair px-4 py-3 text-sm font-semibold">
+            <span className="font-mono text-muted-foreground">2. </span>Scheme alignment & evidence produced
           </h2>
           <table className="w-full text-sm">
             <thead className="text-left text-xs uppercase tracking-wider text-muted-foreground">
@@ -144,7 +144,7 @@ function GovPage() {
             </thead>
             <tbody>
               {schemes.map((s) => (
-                <tr key={s.name} className="border-t border-border align-top">
+                <tr key={s.name} className="border-t border-hair align-top">
                   <td className="px-4 py-3 font-medium">{s.name}</td>
                   <td className="px-4 py-3 text-muted-foreground">{s.line}</td>
                   <td className="px-4 py-3 text-muted-foreground">{s.evidence}</td>
@@ -154,8 +154,8 @@ function GovPage() {
           </table>
         </section>
 
-        <section className="mt-4 rounded-2xl border border-border bg-card p-5 text-sm">
-          <h2 className="text-sm font-semibold">Data sovereignty & procurement posture</h2>
+        <section className="mt-4 rounded-2xl border border-hair bg-card p-5 text-sm">
+          <h2 className="text-sm font-semibold"><span className="font-mono text-muted-foreground">3. </span>Data sovereignty &amp; procurement posture</h2>
           <ul className="mt-3 space-y-2 text-muted-foreground">
             <li>
               All operational data stays in the utility's own database instance; the agent layer
@@ -192,7 +192,7 @@ function Card({
   return (
     <div
       className={`rounded-2xl border px-4 py-3 ${
-        tone === "good" ? "border-primary/40 bg-primary/5" : "border-border bg-card"
+        tone === "good" ? "border-primary/40 bg-primary/5" : "border-hair bg-card"
       }`}
     >
       <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</div>
