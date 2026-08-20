@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
+import { RoiCalculator } from "@/components/roi-calculator";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -126,6 +127,17 @@ function PricingPage() {
               </Link>
             </div>
           ))}
+        </section>
+
+        <section className="mt-8 rounded-2xl border border-border bg-card p-6">
+          <h2 className="font-display text-lg font-semibold">What one percentage point is worth</h2>
+          <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+            Move the sliders to your city. Every figure is plain arithmetic on your own supply
+            volume and cost of water — check it on paper before you believe it.
+          </p>
+          <div className="mt-6">
+            <RoiCalculator />
+          </div>
         </section>
 
         <section className="mt-6 grid gap-4 md:grid-cols-3">

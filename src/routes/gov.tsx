@@ -204,8 +204,54 @@ function GovPage() {
           </table>
         </section>
 
+        <section className="mt-4 overflow-hidden rounded-2xl border border-hair bg-card">
+          <h2 className="border-b border-hair px-4 py-3 text-sm font-semibold">
+            <span className="font-mono text-muted-foreground">3. </span>Audit trail — every agent decision on record
+          </h2>
+          {events.length === 0 ? (
+            <p className="px-4 py-6 text-sm text-muted-foreground">
+              No agent decisions recorded yet. Open the operator control room to run the network.
+            </p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[720px] text-sm">
+                <thead className="text-left text-[11px] uppercase tracking-wider text-muted-foreground">
+                  <tr>
+                    <th className="px-4 py-2">Timestamp (UTC)</th>
+                    <th className="px-4 py-2">Agent</th>
+                    <th className="px-4 py-2">Decision</th>
+                    <th className="px-4 py-2">Confidence</th>
+                    <th className="px-4 py-2">Gate</th>
+                    <th className="px-4 py-2">Approving officer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {events.slice(0, 25).map((e) => (
+                    <tr key={e.id} className="border-t border-hair align-top">
+                      <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-muted-foreground">
+                        {String(e.created_at ?? "").slice(0, 16).replace("T", " ")}
+                      </td>
+                      <td className="px-4 py-3 font-mono text-xs uppercase">{e.agent}</td>
+                      <td className="px-4 py-3">{e.trigger}</td>
+                      <td className="px-4 py-3 font-mono text-xs">
+                        {Math.round(Number(e.confidence ?? 0) * 100)}%
+                      </td>
+                      <td className="px-4 py-3 text-muted-foreground">
+                        {e.requires_human_approval ? e.approval_status : "auto"}
+                      </td>
+                      <td className="px-4 py-3 text-muted-foreground">
+                        {(e as { approved_by?: string | null }).approved_by ?? "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+
         <section className="mt-4 rounded-2xl border border-hair bg-card p-5 text-sm">
-          <h2 className="text-sm font-semibold"><span className="font-mono text-muted-foreground">3. </span>Data sovereignty &amp; procurement posture</h2>
+          <h2 className="text-sm font-semibold"><span className="font-mono text-muted-foreground">4. </span>Data sovereignty &amp; procurement posture</h2>
           <ul className="mt-3 space-y-2 text-muted-foreground">
             <li>
               All operational data stays in the utility's own database instance; the agent layer

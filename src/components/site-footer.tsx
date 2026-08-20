@@ -13,6 +13,7 @@ const cols = [
   {
     title: "Evidence",
     links: [
+      { to: "/how-it-works", label: "How the agents work" },
       { to: "/metrics", label: "Success metrics" },
       { to: "/pricing", label: "Business model" },
       { to: "/contact", label: "Start a pilot" },
