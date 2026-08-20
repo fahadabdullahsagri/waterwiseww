@@ -152,3 +152,22 @@ function Stage({
     </div>
   );
 }
+
+/** Approving a resident-affecting action deserves a gesture: a drop hitting water. */
+function ApproveButton({ onApprove }: { onApprove: () => void }) {
+  const [rippling, setRippling] = useState(false);
+
+  return (
+    <button
+      onClick={() => {
+        setRippling(true);
+        setTimeout(() => setRippling(false), 620);
+        onApprove();
+      }}
+      className="relative overflow-hidden rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+    >
+      {rippling && <span className="ripple-drop" />}
+      <span className="relative">Approve</span>
+    </button>
+  );
+}
