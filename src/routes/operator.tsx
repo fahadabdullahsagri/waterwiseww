@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -46,7 +46,7 @@ function OperatorPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  if (typeof window !== "undefined" && !mounted) setTimeout(() => setMounted(true), 0);
+  useEffect(() => setMounted(true), []);
 
   const alerts = data?.alerts ?? [];
   const wards = new Map((data?.wards ?? []).map((w) => [w.id as string, w]));
